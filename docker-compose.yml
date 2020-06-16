@@ -1,0 +1,65 @@
+version: "3.5"
+
+services:
+
+  crawlcache:
+    build:
+      context: .
+      args:
+        http_proxy: ${HTTP_PROXY}
+        https_proxy: ${HTTPS_PROXY}
+    environment:
+      - CDX_SERVER=http://cdxserver:8080/oc
+      - RECORD_PROXY=http://warcprox:8000/
+      - PLAYBACK_PROXY=http://pywb:8000/
+    ports:
+      - "8000:8080"
+    depends_on:
+      - warcprox
+      - cdxserver
+
+  warcprox:
+    image: ukwa/warcprox:2.3.1
+    #image: warcprox
+    #command: "warcprox -b 0.0.0.0 -d /heritrix/wren --base32 --gzip --rollover-idle-time 600 --dedup-db-file /dev/null --stats-db-file /dev/null --quiet --plugin warcprox-plugins.listeners.KafkaCaptureFeed --plugin warcprox-plugins.listeners.UpdateOutbackCDX"
+    command: "warcprox -v -b 0.0.0.0 -d /output --base32 --gzip --rollover-idle-time 600 --dedup-db-file /dev/null --stats-db-file /dev/null --quiet --plugin warcprox-plugins.listeners.UpdateOutbackCDX"
+    environment:
+      - "LC_ALL=en_US.utf8"
+      - "TMP=/tmp/warcprox"
+      - "KAFKA_BOOTSTRAP_SERVERS=kafka:9092"
+      - "KAFKA_CRAWLED_TOPIC=fc.crawled"
+      - "KAFKA_CRAWLED_ACKS=1"
+      - "CDXSERVER_ENDPOINT=http://cdxserver:8080/fc"
+      - "HTTP_PROXY"
+      - "HTTPS_PROXY"
+    ports:
+      - "8001:8000"
+    ulimits:
+      nproc: 2000 # See https://github.com/internetarchive/warcprox/blob/2.x/warcprox/warcproxy.py#L413
+    volumes:
+      - ./testing/warcprox:/output
+
+  # cdxserver
+  cdxserver:
+    image: nlagovau/outbackcdx:0.7.0
+    # Verbose form logs submissions:
+    #command: "java -jar outbackcdx.jar -v -d /cdx-data -p 8080 -b 0.0.0.0"
+    ports:
+      - "9090:8080"
+    volumes:
+      - ./testing/cdx-data:/cdx-data
+
+  # Proxy-mode playback:
+  pywb:
+    image: ukwa/ukwa-pywb:2.4.0-beta
+    environment:
+      - "DEBUG=True"
+      - "WEBHDFS_USER=access"
+      - "UKWA_INDEX=cdx+http://cdxserver:8080/oc"
+      - "UKWA_ARCHIVE=/warcs"
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./pywb-config.yaml:/webarchive/config.yaml
+      - ./testing/warcprox:/warcs
+
