@@ -9,9 +9,9 @@ services:
         http_proxy: ${HTTP_PROXY}
         https_proxy: ${HTTPS_PROXY}
     environment:
-      - CDX_SERVER=http://cdxserver:8080/oc
+      - CDX_SERVER=http://cdxserver:8080/fc
       - RECORD_PROXY=http://warcprox:8000/
-      - PLAYBACK_PROXY=http://pywb:8000/
+      - PLAYBACK_PROXY=http://pywb:8080/
     ports:
       - "8000:8080"
     depends_on:
@@ -34,6 +34,8 @@ services:
       - "HTTPS_PROXY"
     ports:
       - "8001:8000"
+    depends_on:
+      - cdxserver
     ulimits:
       nproc: 2000 # See https://github.com/internetarchive/warcprox/blob/2.x/warcprox/warcproxy.py#L413
     volumes:
@@ -49,16 +51,26 @@ services:
     volumes:
       - ./testing/cdx-data:/cdx-data
 
+  warcserver:
+    image: ukwa/warc-server
+    ports:
+      - 8008:8000
+    environment:
+      - "WARC_PATHS=/warcs"
+    volumes:
+      - ./testing/warcprox:/warcs
+
   # Proxy-mode playback:
   pywb:
     image: ukwa/ukwa-pywb:2.4.0-beta
     environment:
       - "DEBUG=True"
-      - "WEBHDFS_USER=access"
-      - "UKWA_INDEX=cdx+http://cdxserver:8080/oc"
-      - "UKWA_ARCHIVE=/warcs"
+      - "UKWA_INDEX=cdx+http://cdxserver:8080/fc"
+      - "UKWA_ARCHIVE=http://warcserver:8000/by-filename/"
+    depends_on: 
+      - cdxserver
     ports:
-      - "8002:8000"
+      - "8002:8080"
     volumes:
       - ./pywb-config.yaml:/webarchive/config.yaml
       - ./testing/warcprox:/warcs

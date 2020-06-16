@@ -9,4 +9,4 @@ RUN \
 
 COPY crawlcache.py .
 
-CMD mitmdump -s crawlcache.py
+CMD mitmdump --flow-detail 3 -v --ssl-insecure --mode upstream:http://warcprox:8000/ -s crawlcache.py
