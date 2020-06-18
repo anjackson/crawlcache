@@ -1,7 +1,7 @@
 # CrawlCache
 Experimental crawler proxy using a WARC-based cache.
 
-The [Chronicrawl](https://github.com/nla/chronicrawl) project prompted me to prototype my idea of a caching crawler proxy, powered by WARCs. The basic idea is the same, in that we design a crawler that will crawl the live web, archiving as it goes, but when revisiting a URL, can play back the response from the archive rather than visit the original server every time.
+The [Chronicrawl](https://github.com/nla/chronicrawl) project prompted me to prototype my idea of a caching crawler proxy, powered by WARCs. The basic idea is similar to one of the features of Chronicrawl: a crawler that will crawl the live web, archiving as it goes, but when revisiting a URL, can play back the response from the archive rather than visit the original server every time.
 
 The difference is that rather than closely integrating with the browser, we implement this as a HTTP proxy. This means any existing crawler or HTTP client can be used with it. Of course the downside is that you need a separate crawler that can take advantage of the features of the proxy.
 
