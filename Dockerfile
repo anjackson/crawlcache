@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.7-buster
 
 WORKDIR /crawlcache
 
@@ -10,3 +10,4 @@ RUN \
 COPY crawlcache.py .
 
 CMD mitmdump --flow-detail 3 -v --ssl-insecure --mode upstream:http://warcprox:8000/ -s crawlcache.py
+

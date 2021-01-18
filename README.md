@@ -36,3 +36,13 @@ The first time it's called, the warcprox service will be used to archive the req
 - ...at actual scale!
 
 
+
+
+
+
+
+RUN openssl req -newkey rsa:4096 -x509 -keyout /etc/squid/squid.pem -out /etc/squid/squid.pem -days 365 -nodes
+RUN chmod 400 /etc/squid/squid.pem
+RUN openssl x509 -in /etc/squid/squid.pem -outform DER -out /etc/squid/squid.der
+
+

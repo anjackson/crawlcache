@@ -18,6 +18,22 @@ services:
       - warcprox
       - cdxserver
 
+  crawlcache-squid:
+    build:
+      context: squid
+      args:
+        http_proxy: ${HTTP_PROXY}
+        https_proxy: ${HTTPS_PROXY}
+    environment:
+      - CDX_SERVER=http://cdxserver:8080/fc
+      - RECORD_PROXY=http://warcprox:8000/
+      - PLAYBACK_PROXY=http://pywb:8080/
+    ports:
+      - "3127:3127"
+    depends_on:
+      - warcprox
+      - cdxserver
+
   warcprox:
     image: ukwa/warcprox:2.3.1
     #image: warcprox
