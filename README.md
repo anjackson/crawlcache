@@ -26,6 +26,8 @@ The first time it's called, the warcprox service will be used to archive the req
 
 ## To Do
 
+- Currently scoping is out of scope, and we must use separate instances for NPLD/By-Permission, as we can't differentiate navigations from transclusions.
+    - If we can change this, we could route requests to upstream NPLD/BY-Permission warcprox instances as appropriate, or block with a `451` and record those blocks for analysis.
 - Only use pywb for plain GET requests, and if the match is a 200 (?).
 - Support an [`Accept-Datetime`](https://mementoweb.org/guide/rfc/#overview-datetime-conneg)/`CrawlCache-Recrawl-After: <date-time>` header to allow the client to say 'The resource must be recrawled from the live web if it's older than this'.
 - Consider interpretation of standard `Cache-Control` headers.
