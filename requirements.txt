@@ -32,7 +32,7 @@ six==1.15.0
 sortedcontainers==2.1.0
 tornado==6.0.4
 urlcanon==0.3.1
-urllib3==1.25.9
+urllib3==1.26.5
 urwid==2.1.0
 Werkzeug==1.0.1
 wsproto==0.15.0
