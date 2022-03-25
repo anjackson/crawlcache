@@ -16,7 +16,7 @@ Jinja2==2.11.3
 kaitaistruct==0.8
 ldap3==2.7
 MarkupSafe==1.1.1
-mitmproxy==7.0.3
+mitmproxy==8.0.0
 passlib==1.7.2
 protobuf==3.15.0
 publicsuffix2==2.20191221
