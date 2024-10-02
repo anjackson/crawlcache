@@ -34,7 +34,7 @@ The first time it's called, the warcprox service will be used to archive the req
 - Support a [watchdog](https://pypi.org/project/watchdog/)-reloadable [pygtrie](https://github.com/google/pygtrie#pygtrie)-based [SURT](https://github.com/iipc/urlcanon/blob/master/python/urlcanon/canon.py#L530) map of recrawl periods/timestamps.
 - Support needed WARC file-naming conventions.
 - Support using pywb in recording mode as an alternative to warcprox (needs deduplication, and to integrate with OutbackCDX & Kafka as per the UKWA warcprox modules, but would improve handling of video, partial requests, etc.).
-- If the idea is sound, consider building directly on pywb/warcprox rather than chaining proxies via mitmproxy. e.g. mitmproxy addon that [uses pywb's WARC Writer](https://github.com/webrecorder/pywb/blob/main/pywb/apps/frontendapp.py#L247) directly?
+- If the idea is sound, consider building directly on pywb/warcprox rather than chaining proxies via mitmproxy. e.g. mitmproxy addon that [uses pywb's WARC Writer](https://github.com/webrecorder/pywb/blob/main/pywb/apps/frontendapp.py#L247) directly (a bit like [this example](https://docs.mitmproxy.org/stable/addons-examples/#io-write-flow-file))?
 - Check it works!
 - ...at actual scale!
 
